@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @MicronautTest
@@ -24,8 +26,11 @@ class MarketsControllerTest {
 
     @Test
     void returnsListOfMarkets() {
-       final List result = client.toBlocking().retrieve("/markets" , List.class);
+       final List<LinkedHashMap<String, String>> result = client.toBlocking().retrieve("/markets" , List.class);
        assertEquals(7 , result.size());
+       assertThat(result)
+               .extracting(entry -> entry.get("value"))
+               .containsExactlyInAnyOrder("AAPL" , "AMZN" , "FB" , "GOOG" , "MSFT" , "NFLX" , "TSLA");
     }
 
 }
